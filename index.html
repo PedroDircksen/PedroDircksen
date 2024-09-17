@@ -172,6 +172,11 @@
             background-color: #218838;
         }
 
+        #texto{
+            font-size: 20px;
+            color: white;
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -234,6 +239,9 @@
         <img id="logoAtletica" src="logoAtletica.jpg" alt="Logo da Atlética">
     </header>
 
+    <div>
+        <p id="texto">Pressione a barra de espaço ou clique na tela para pular</p>
+    </div>
     <div id="gameArea">
         <div id="background"></div>
         <div id="ground"></div>
@@ -251,6 +259,7 @@
             <h1>Parabéns, temos um novo Record! Você é um galo cinza!</h1>
             <button onclick="restartGame()">Reiniciar</button>
         </div>
+        <br>
     </div>
 
     <script>
@@ -272,6 +281,11 @@
 
         document.addEventListener("keydown", function (event) {
             if (event.key === " " && !isGameOver) {
+                jump();
+            }
+        });
+        document.addEventListener("click", function (event) {
+            if (!isGameOver) {
                 jump();
             }
         });

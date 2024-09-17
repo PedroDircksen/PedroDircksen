@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo Personalizado</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #0c103d, #0d2e5b, #005489);
+            margin: 0;
+        }
+
+        /* Cabeçalho com logos */
+        header {
+            width: 100%;
+            margin: 0 0 40px 0;
+            display: flex;
+            justify-content: center;
+            align-items: left;
+        }
+
+        #logoCurso,
+        #logoFaculdade,
+        #logoAtletica {
+            height: 100px;
+        }
+
+        #gameArea {
+            width: 1000px;
+            height: 500px;
+            border: 3px solid #000;
+            border-radius: 15px;
+            background-color: #fff;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #background {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-image: url('fundo1.png');
+            background-size: cover;
+            animation: backgroundAnimation 10s linear infinite;
+        }
+
+        #ground {
+            width: 100%;
+            height: 60px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            background-image: url('chao1.png');
+            background-size: cover;
+            animation: groundAnimation 4s linear infinite;
+        }
+
+        #character {
+            width: 60px;
+            height: 60px;
+            background-image: url('meuPersonagem1.png');
+            background-size: cover;
+            position: absolute;
+            bottom: 60px;
+            left: 300px;
+            animation: characterAnimation 0.5s steps(2) infinite;
+        }
+
+        #obstacle {
+            width: 60px;
+            height: 60px;
+            background-image: url('obstaculo.png');
+            background-size: cover;
+            position: absolute;
+            bottom: 60px;
+            right: 0;
+        }
+
+        #scoreBoard {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 24px;
+        }
+
+        #scoreBoard span {
+            display: block;
+        }
+
+        #gameOverMessage {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 0, 0, 0.7);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        #gameOverMessage h1 {
+            margin: 0;
+            font-size: 36px;
+        }
+
+        #gameOverMessage button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #gameOverMessage button:hover {
+            background-color: #218838;
+        }
+
+        #congratulationsMessage {
+            display: none;
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 255, 0, 0.7);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        #congratulationsMessage h1 {
+            margin: 0;
+            font-size: 36px;
+        }
+
+        #congratulationsMessage button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #congratulationsMessage button:hover {
+            background-color: #218838;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes backgroundAnimation {
+            0% {
+                background-image: url('fundo1.jpg');
+            }
+
+            50% {
+                background-image: url('fundo2.jpg');
+            }
+
+            100% {
+                background-image: url('fundo1.jpg');
+            }
+        }
+
+        @keyframes groundAnimation {
+            0% {
+                background-image: url('chao1.png');
+            }
+
+            50% {
+                background-image: url('chao2.png');
+            }
+
+            100% {
+                background-image: url('chao1.png');
+            }
+        }
+
+        @keyframes characterAnimation {
+            0% {
+                background-image: url('meuPersonagem1.png');
+            }
+
+            50% {
+                background-image: url('meuPersonagem2.png');
+            }
+
+            100% {
+                background-image: url('meuPersonagem1.png');
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Cabeçalho com logos -->
+    <header>
+        <img id="logoCurso" src="logoCurso.png" alt="Logo do Curso">
+        <img id="logoFaculdade" src="logoFaculdade.png" alt="Logo da Faculdade">
+        <img id="logoAtletica" src="logoAtletica.jpg" alt="Logo da Atlética">
+    </header>
+
+    <div id="gameArea">
+        <div id="background"></div>
+        <div id="ground"></div>
+        <div id="character"></div>
+        <div id="obstacle"></div>
+        <div id="scoreBoard">
+            <span>Pontuação: <span id="currentScore">0</span></span>
+            <span>Melhor pontuação: <span id="highScore">0</span></span>
+        </div>
+        <div id="gameOverMessage">
+            <h1>Game Over!</h1>
+            <button onclick="restartGame()">Reiniciar</button>
+        </div>
+        <div id="congratulationsMessage">
+            <h1>Parabéns, temos um novo Record! Você é um galo cinza!</h1>
+            <button onclick="restartGame()">Reiniciar</button>
+        </div>
+    </div>
+
+    <script>
+        let character = document.getElementById("character");
+        let obstacle = document.getElementById("obstacle");
+        let gameOverMessage = document.getElementById("gameOverMessage");
+        let congratulationsMessage = document.getElementById("congratulationsMessage");
+        let currentScoreDisplay = document.getElementById("currentScore");
+        let highScoreDisplay = document.getElementById("highScore");
+
+        let isJumping = false;
+        let isGameOver = false;
+        let gameTime = 0;
+        let obstacleSpeed = 5;
+        let currentScore = 0;
+        let highScore = localStorage.getItem('highScore') || 0;
+
+        highScoreDisplay.textContent = highScore;
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === " " && !isGameOver) {
+                jump();
+            }
+        });
+
+        function jump() {
+            if (isJumping) return;
+            let jumpHeight = 150;
+            let jumpCount = 0;
+            isJumping = true;
+
+            let jumpInterval = setInterval(() => {
+                if (jumpCount < 15) {
+                    character.style.bottom = (parseInt(window.getComputedStyle(character).bottom) + 10) + "px";
+                    jumpCount++;
+                } else {
+                    clearInterval(jumpInterval);
+                    let fallInterval = setInterval(() => {
+                        if (parseInt(window.getComputedStyle(character).bottom) > 0) {
+                            character.style.bottom = (parseInt(window.getComputedStyle(character).bottom) - 5) + "px";
+                        } else {
+                            clearInterval(fallInterval);
+                            isJumping = false;
+                        }
+                    }, 20);
+                }
+            }, 20);
+        }
+
+        function moveObstacle() {
+            if (isGameOver) return;
+
+            let obstaclePosition = parseInt(window.getComputedStyle(obstacle).right);
+            obstaclePosition += obstacleSpeed;
+
+            obstacle.style.right = obstaclePosition + 'px';
+
+            if (obstaclePosition >= 1200) {
+                obstacle.style.right = '0px';
+                updateScore();
+            }
+        }
+
+        function increaseDifficulty() {
+            gameTime += 1;
+
+            if (gameTime % 10 === 0) {
+                obstacleSpeed += 1;
+            }
+        }
+
+        function checkCollision() {
+            let characterRect = character.getBoundingClientRect();
+            let obstacleRect = obstacle.getBoundingClientRect();
+
+            if (
+                characterRect.left < obstacleRect.right &&
+                characterRect.right > obstacleRect.left &&
+                characterRect.top < obstacleRect.bottom &&
+                characterRect.bottom > obstacleRect.top
+            ) {
+                endGame();
+            }
+        }
+
+        function endGame() {
+            isGameOver = true;
+            gameOverMessage.style.display = 'block';
+
+            if (currentScore > highScore) {
+                highScore = currentScore;
+                localStorage.setItem('highScore', highScore);
+                highScoreDisplay.textContent = highScore;
+                congratulationsMessage.style.display = 'block'; // Exibe a mensagem de parabéns
+                gameOverMessage.style.display = 'none'; // Esconde a mensagem de game over
+            }
+        }
+
+        function restartGame() {
+            location.reload();
+        }
+
+        function updateScore() {
+            if (isGameOver) return;
+            currentScore += 10;
+            currentScoreDisplay.textContent = currentScore;
+        }
+
+        function gameLoop() {
+            moveObstacle();
+            checkCollision();
+            if (!isGameOver) {
+                requestAnimationFrame(gameLoop);
+            }
+        }
+
+        setInterval(increaseDifficulty, 1000);
+        setInterval(updateScore, 200);
+
+        gameLoop();
+    </script>
+</body>
+
+</html>

@@ -4,33 +4,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jogo Personalizado</title>
+    <title>Jogo com Ranking</title>
     <style>
-        /* Seu estilo CSS já existente */
         body {
             font-family: sans-serif;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            height: 100vh;
             background: linear-gradient(135deg, #0c103d, #0d2e5b, #005489);
             margin: 0;
+            height: 100vh;
+            color: white;
         }
 
-        /* Cabeçalho com logos */
         header {
             width: 100%;
-            margin: 0 0 40px 0;
+            margin: 20px 0;
             display: flex;
             justify-content: center;
-            align-items: left;
+            gap: 20px;
         }
 
         #logoCurso,
         #logoFaculdade,
         #logoAtletica {
             height: 100px;
+        }
+
+        #mainContent {
+            display: flex;
+            gap: 30px;
+            width: 90%;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        #gameWrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #texto {
+            font-size: 20px;
+            margin-bottom: 10px;
         }
 
         #gameArea {
@@ -44,10 +61,14 @@
             overflow: hidden;
         }
 
-        #background {
-            width: 100%;
-            height: 100%;
+        #background,
+        #ground {
             position: absolute;
+            width: 100%;
+        }
+
+        #background {
+            height: 100%;
             top: 0;
             left: 0;
             background-image: url('fundo1.jpg');
@@ -55,9 +76,7 @@
         }
 
         #ground {
-            width: 100%;
             height: 100px;
-            position: absolute;
             bottom: 0;
             left: 0;
             background-image: url('chao1.png');
@@ -94,54 +113,19 @@
             color: white;
             padding: 10px;
             border-radius: 10px;
-            font-size: 24px;
+            font-size: 20px;
         }
 
         #scoreBoard span {
             display: block;
         }
 
-        #gameOverMessage {
-            display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(255, 0, 0, 0.7);
-            color: white;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            animation: fadeIn 1s ease-in-out;
-        }
-
-        #gameOverMessage h1 {
-            margin: 0;
-            font-size: 36px;
-        }
-
-        #gameOverMessage button {
-            margin-top: 10px;
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        #gameOverMessage button:hover {
-            background-color: #218838;
-        }
-
+        #gameOverMessage,
         #congratulationsMessage {
             display: none;
             position: absolute;
-            top: 60%;
             left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(0, 255, 0, 0.7);
+            transform: translateX(-50%);
             color: white;
             padding: 20px;
             border-radius: 15px;
@@ -149,11 +133,17 @@
             animation: fadeIn 1s ease-in-out;
         }
 
-        #congratulationsMessage h1 {
-            margin: 0;
-            font-size: 36px;
+        #gameOverMessage {
+            top: 40%;
+            background: rgba(255, 0, 0, .7);
         }
 
+        #congratulationsMessage {
+            top: 50%;
+            background: rgba(0, 255, 0, .7);
+        }
+
+        #gameOverMessage button,
         #congratulationsMessage button {
             margin-top: 10px;
             padding: 10px 20px;
@@ -165,12 +155,77 @@
             transition: background-color 0.3s;
         }
 
+        #gameOverMessage button:hover,
         #congratulationsMessage button:hover {
             background-color: #218838;
         }
 
-        #texto {
-            font-size: 20px;
+        #rankingContainer {
+            width: 250px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            color: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 10px;
+        }
+
+        #rankingContainer h3 {
+            margin: 0;
+            font-size: 18px;
+            text-align: center;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 6px;
+        }
+
+        #rankingList {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            max-height: 350px;
+            overflow-y: auto;
+            font-size: 14px;
+        }
+
+        #rankingList li {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px dashed #ccc;
+        }
+
+        #clearRankingBtn {
+            opacity: 0;
+            width: 100%;
+            height: 20px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            padding: 0;
+            margin-top: 5px;
+        }
+
+        #nameForm {
+            margin-bottom: 15px;
+            text-align: center;
+            color: #fff;
+        }
+
+        #nameForm input {
+            padding: 6px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        #nameForm button {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #28a745;
             color: white;
         }
 
@@ -201,184 +256,182 @@
 </head>
 
 <body>
-    <!-- Cabeçalho com logos -->
     <header>
         <img id="logoCurso" src="logoCurso.png" alt="Logo do Curso">
         <img id="logoFaculdade" src="logoFaculdade.png" alt="Logo da Faculdade">
         <img id="logoAtletica" src="logoAtletica.jpg" alt="Logo da Atlética">
     </header>
 
-    <div>
-        <p id="texto">Pressione a barra de espaço ou clique na tela para pular</p>
-    </div>
-    <div id="gameArea">
-        <div id="background"></div>
-        <div id="ground"></div>
-        <div id="character"></div>
-        <div id="obstacle"></div>
-        <div id="scoreBoard">
-            <span>Pontuação: <span id="currentScore">0</span></span>
-            <span>Melhor pontuação: <span id="highScore">0</span></span>
+    <div id="mainContent">
+        <div id="gameWrapper">
+            <form id="nameForm">
+                <label>Digite seu nome:</label><br>
+                <input type="text" id="playerNameInput" required>
+                <button type="submit">Iniciar Jogo</button>
+            </form>
+
+            <p id="texto">Pressione a barra de espaço ou clique na tela para pular</p>
+
+            <div id="gameArea" style="display:none;">
+                <div id="background"></div>
+                <div id="ground"></div>
+                <div id="character"></div>
+                <div id="obstacle"></div>
+                <div id="scoreBoard">
+                    <span>Pontuação: <span id="currentScore">0</span></span>
+                    <span>Melhor pontuação: <span id="highScore">0</span></span>
+                </div>
+                <div id="gameOverMessage">
+                    <h1>Game Over!</h1>
+                    <button onclick="restartGame()">Reiniciar</button>
+                </div>
+                <div id="congratulationsMessage">
+                    <h1>Novo Record!</h1>
+                    <button onclick="restartGame()">Reiniciar</button>
+                </div>
+            </div>
         </div>
-        <div id="gameOverMessage">
-            <h1>Game Over!</h1>
-            <button onclick="restartGame()">Reiniciar</button>
-        </div>
-        <div id="congratulationsMessage">
-            <h1>Parabéns, temos um novo Record! Você é um galo cinza!</h1>
-            <button onclick="restartGame()">Reiniciar</button>
+
+        <div id="rankingContainer">
+            <h3>Ranking</h3>
+            <ol id="rankingList"></ol>
+            <button id="clearRankingBtn">Limpar ranking</button>
         </div>
     </div>
 
     <script>
-        let character = document.getElementById("character");
-        let obstacle = document.getElementById("obstacle");
-        let gameOverMessage = document.getElementById("gameOverMessage");
-        let congratulationsMessage = document.getElementById("congratulationsMessage");
-        let currentScoreDisplay = document.getElementById("currentScore");
-        let highScoreDisplay = document.getElementById("highScore");
+        let character, obstacle, gameOverMessage, congratulationsMessage, currentScoreDisplay, highScoreDisplay;
+        let isJumping = false, isGameOver = false, gameTime = 0, obstacleSpeed = 5;
+        let currentScore = 0, highScore = localStorage.getItem('highScore') || 0;
+        let playerName = "";
 
-        let isJumping = false;
-        let isGameOver = false;
-        let gameTime = 0;
-        let obstacleSpeed = 5;
+        // Ranking
+        let ranking = JSON.parse(localStorage.getItem('ranking') || '[]');
+        function saveRanking() { localStorage.setItem('ranking', JSON.stringify(ranking)); }
+        function updateRankingUI() {
+            const list = document.getElementById('rankingList');
+            ranking.sort((a, b) => b.score - a.score);
+            list.innerHTML = '';
+            ranking.slice(0, 30).forEach((r, i) => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span>${i + 1}. ${r.name}</span><span>${r.score}</span>`;
+                list.appendChild(li);
+            });
+            const best = ranking.length ? ranking[0].score : 0;
+            highScore = Math.max(highScore, best);
+            if (highScoreDisplay) highScoreDisplay.textContent = highScore;
+        }
 
-        let currentScore = 0;
-        let highScore = localStorage.getItem('highScore') || 0;
-
-        highScoreDisplay.textContent = highScore;
-
-        document.addEventListener("keydown", function (event) {
-            if (event.key === " " && !isGameOver) {
-                jump();
+        document.getElementById("clearRankingBtn").addEventListener("click", () => {
+            if (confirm("Tem certeza que deseja limpar o ranking e os recordes?")) {
+                localStorage.removeItem('ranking');
+                localStorage.removeItem('highScore');
+                ranking = [];
+                highScore = 0;
+                updateRankingUI();
+                alert("Ranking apagado com sucesso.");
+                location.reload();
             }
         });
-        document.addEventListener("click", function (event) {
-            if (!isGameOver) {
-                jump();
-            }
+        const list = document.getElementById('rankingList');
+        ranking.sort((a, b) => b.score - a.score);
+        list.innerHTML = "";
+        ranking.slice(0, 30).forEach((r, i) => {
+            const li = document.createElement('li');
+            li.textContent = `${i + 1}. ${r.name} — ${r.score}`;
+            list.appendChild(li);
         });
+        const best = ranking.length ? ranking[0].score : 0;
+        highScore = Math.max(highScore, best);
+        if (highScoreDisplay) highScoreDisplay.textContent = highScore;
+
+        function addToRanking(name, score) {
+            ranking.push({ name: name.trim().slice(0, 20), score, ts: Date.now() });
+            ranking = ranking.slice(0, 50);
+            saveRanking(); updateRankingUI();
+        }
+        updateRankingUI();
+
+        // Form para iniciar jogo
+        document.getElementById("nameForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            playerName = document.getElementById("playerNameInput").value || "Anônimo";
+            document.getElementById("nameForm").style.display = "none";
+            document.getElementById("gameArea").style.display = "block";
+            iniciarJogo();
+        });
+
+        function iniciarJogo() {
+            character = document.getElementById("character");
+            obstacle = document.getElementById("obstacle");
+            gameOverMessage = document.getElementById("gameOverMessage");
+            congratulationsMessage = document.getElementById("congratulationsMessage");
+            currentScoreDisplay = document.getElementById("currentScore");
+            highScoreDisplay = document.getElementById("highScore");
+            currentScore = 0; obstacleSpeed = 5; gameTime = 0; isGameOver = false;
+            highScoreDisplay.textContent = highScore;
+            document.addEventListener("keydown", e => { if (e.key === " " && !isGameOver) jump(); });
+            document.addEventListener("click", () => { if (!isGameOver) jump(); });
+            setInterval(increaseDifficulty, 1000);
+            setInterval(updateScore, 200);
+            gameLoop();
+        }
 
         function jump() {
             if (isJumping) return;
-            let jumpCount = 0;
-            isJumping = true;
-
+            let jumpCount = 0; isJumping = true;
             let jumpInterval = setInterval(() => {
                 if (jumpCount < 12) {
-                    character.style.bottom = (parseInt(window.getComputedStyle(character).bottom) + 15) + "px";
-                    jumpCount++;
+                    character.style.bottom = (parseInt(getComputedStyle(character).bottom) + 15) + "px"; jumpCount++;
                 } else {
                     clearInterval(jumpInterval);
                     let fallInterval = setInterval(() => {
-                        if (parseInt(window.getComputedStyle(character).bottom) > 46) {
-                            character.style.bottom = (parseInt(window.getComputedStyle(character).bottom) - 8) + "px";
-                        } else {
-                            clearInterval(fallInterval);
-                            isJumping = false;
-                        }
+                        if (parseInt(getComputedStyle(character).bottom) > 46) {
+                            character.style.bottom = (parseInt(getComputedStyle(character).bottom) - 8) + "px";
+                        } else { clearInterval(fallInterval); isJumping = false; }
                     }, 20);
                 }
             }, 20);
         }
-
-        // Função para alternar aleatoriamente o obstáculo
-
-        function randomizeObstacle() {
-            const randomNum = Math.random();
-            if (randomNum < 0.5) {
-                obstacle.style.backgroundImage = "url('obstaculo1.png')";
-            } else {
-                obstacle.style.backgroundImage = "url('obstaculo2.png')";
-            }
-        }
-
+        function randomizeObstacle() { obstacle.style.backgroundImage = Math.random() < 0.5 ? "url('obstaculo1.png')" : "url('obstaculo2.png')"; }
         function moveObstacle() {
             if (isGameOver) return;
-
-            let obstaclePosition = parseInt(window.getComputedStyle(obstacle).right);
-            obstaclePosition += obstacleSpeed;
-
-            obstacle.style.right = obstaclePosition + 'px';
-
-            if (obstaclePosition >= 1200) {
-                obstacle.style.right = '0px';
-                updateScore();  // Chama a função para alterar o obstáculo
-                randomizeObstacle();
-            }
+            let pos = parseInt(getComputedStyle(obstacle).right);
+            obstacle.style.right = (pos + obstacleSpeed) + 'px';
+            if (pos >= 1200) { obstacle.style.right = '0px'; updateScore(); randomizeObstacle(); }
         }
-
-        function increaseDifficulty() {
-            gameTime += 1;
-
-            if (gameTime % 6 === 0) {
-                obstacleSpeed += 1;
-            }
-        }
-
+        function increaseDifficulty() { gameTime++; if (gameTime % 6 === 0) obstacleSpeed += 1; }
         function checkCollision() {
-            let characterRect = character.getBoundingClientRect();
-            let obstacleRect = obstacle.getBoundingClientRect();
-
-            if (
-                characterRect.left < obstacleRect.right &&
-                characterRect.right > obstacleRect.left &&
-                characterRect.top < obstacleRect.bottom &&
-                characterRect.bottom > obstacleRect.top
-            ) {
-                endGame();
-            }
+            let c = character.getBoundingClientRect(), o = obstacle.getBoundingClientRect();
+            if (c.left < o.right && c.right > o.left && c.top < o.bottom && c.bottom > o.top) endGame();
         }
-
         function endGame() {
             isGameOver = true;
             gameOverMessage.style.display = 'block';
-
+            addToRanking(playerName, currentScore);
             if (currentScore > highScore) {
-                highScore = currentScore;
-                localStorage.setItem('highScore', highScore);
+                highScore = currentScore; localStorage.setItem('highScore', highScore);
                 highScoreDisplay.textContent = highScore;
-                congratulationsMessage.style.display = 'block'; // Exibe a mensagem de parabéns
-                gameOverMessage.style.display = 'none'; // Esconde a mensagem de game over
+                congratulationsMessage.style.display = 'block';
+                gameOverMessage.style.display = 'none';
             }
         }
-
-        function restartGame() {
-            location.reload();
-        }
-
-        function updateScore() {
-            if (isGameOver) return;
-            currentScore += 10;
-            currentScoreDisplay.textContent = currentScore;
-        }
-
+        function restartGame() { location.reload(); }
+        function updateScore() { if (!isGameOver) { currentScore += 10; currentScoreDisplay.textContent = currentScore; } }
         function moveBackground() {
-            let backgroundPosition = parseInt(window.getComputedStyle(document.getElementById("background")).backgroundPositionX);
-            backgroundPosition -= obstacleSpeed;
-            document.getElementById("background").style.backgroundPositionX = backgroundPosition + 'px';
+            let bg = document.getElementById("background");
+            let pos = parseInt(getComputedStyle(bg).backgroundPositionX) || 0;
+            bg.style.backgroundPositionX = (pos - obstacleSpeed) + 'px';
         }
-
         function moveGround() {
-            let groundPosition = parseInt(window.getComputedStyle(document.getElementById("ground")).backgroundPositionX);
-            groundPosition -= obstacleSpeed;
-            document.getElementById("ground").style.backgroundPositionX = groundPosition + 'px';
+            let g = document.getElementById("ground");
+            let pos = parseInt(getComputedStyle(g).backgroundPositionX) || 0;
+            g.style.backgroundPositionX = (pos - obstacleSpeed) + 'px';
         }
-
         function gameLoop() {
-            moveObstacle();
-            moveBackground();
-            moveGround();
-            checkCollision();
-            if (!isGameOver) {
-                requestAnimationFrame(gameLoop);
-            }
+            moveObstacle(); moveBackground(); moveGround(); checkCollision();
+            if (!isGameOver) requestAnimationFrame(gameLoop);
         }
-
-        setInterval(increaseDifficulty, 1000);
-        setInterval(updateScore, 200);
-
-        gameLoop();
     </script>
 </body>
 

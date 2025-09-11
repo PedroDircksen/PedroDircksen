@@ -347,7 +347,7 @@
 
         function addToRanking(name, score) {
             ranking.push({ name: name.trim().slice(0, 20), score, ts: Date.now() });
-            ranking = ranking.slice(0, 50);
+            ranking = ranking.slice(0, 5000);
             saveRanking(); updateRankingUI();
         }
         updateRankingUI();
